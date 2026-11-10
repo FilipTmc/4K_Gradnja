@@ -1,0 +1,154 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Contact from '../components/Contact.astro';
+import { firma, usluge, koraci, mjesta } from '../data/site';
+
+---
+<Layout
+  title="4KGradnja | Fasade, gletanje i bojanje u Zadru i Zadarskoj županiji"
+  description="4KGradnja iz Zadra izvodi završne unutarnje radove, fasade, gletanje, strojno bojanje i hidroizolacije na području cijele Zadarske županije. Nazovite za procjenu."
+>
+  <Header />
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero__grid">
+        <div class="hero__text">
+          <p class="eyebrow">Zadar i Zadarska županija</p>
+          <h1>Fasade i završni radovi <span class="gold">izvedeni kako treba</span></h1>
+          <p class="lead">
+            Gletanje, bojanje, fasade i unutarnji završni radovi za obiteljske kuće,
+            stanove i poslovne prostore. Dolazimo na procjenu, šaljemo jasnu ponudu
+            i radove privodimo kraju uredno i u dogovorenom roku.
+          </p>
+          <div class="hero__cta">
+            <a class="btn btn--gold" href={firma.telefonLink}>
+              <Icon name="phone" size={20} /> Nazovite za procjenu
+            </a>
+            <a class="btn btn--ghost" href={firma.whatsapp} target="_blank" rel="noopener">
+              <Icon name="chat" size={20} /> Pošaljite poruku
+            </a>
+          </div>
+        </div>
+
+        <aside class="hero__card" aria-label="Ukratko">
+          <p class="hero__card-title">Što radimo</p>
+          <ul>
+            {usluge.map((u) => (
+              <li><Icon name="check" size={18} /> {u.naslov}</li>
+            ))}
+          </ul>
+          <div class="hero__card-foot">
+            <span>Za privatne klijente i tvrtke</span>
+          </div>
+        </aside>
+      </div>
+      <div class="hero__stripe" aria-hidden="true"></div>
+    </section>
+
+    <!-- USLUGE -->
+    <section class="section" id="usluge">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Usluge</p>
+          <h2>Od gruble podloge do završnog sloja</h2>
+          <p>Jedan izvođač za unutarnje i vanjske završne radove, bez traženja više majstora.</p>
+        </div>
+        <div class="cards">
+          {usluge.map((u) => (
+            <article class="card">
+              <div class="card__icon"><Icon name={u.ikona} /></div>
+              <h3>{u.naslov}</h3>
+              <p>{u.opis}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- KAKO RADIMO -->
+    <section class="section section--dark" id="kako-radimo">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Kako radimo</p>
+          <h2>Tri koraka do gotovog posla</h2>
+        </div>
+        <ol class="steps">
+          {koraci.map((k, i) => (
+            <li class="step">
+              <span class="step__num">0{i + 1}</span>
+              <h3>{k.naslov}</h3>
+              <p>{k.opis}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <!-- ZA KOGA -->
+    <section class="section">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">Za koga radimo</p>
+          <h2>Lokalni ljudi i lokalne tvrtke</h2>
+          <p class="muted">
+            Radimo za one koji u Zadarskoj županiji žive i posluju, pa znamo što
+            more, sunce i bura rade zidovima i fasadama.
+          </p>
+        </div>
+        <div class="audience">
+          <div class="audience__item">
+            <h3>Privatni klijenti</h3>
+            <p>Obiteljske kuće, stanovi i vikendice: obnova, adaptacija ili uređenje prije useljenja.</p>
+          </div>
+          <div class="audience__item">
+            <h3>Tvrtke</h3>
+            <p>Uredi, lokali, apartmani i poslovni objekti kojima treba brz, uredan i pouzdan izvođač.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PODRUČJE -->
+    <section class="section section--soft" id="podrucje">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Područje rada</p>
+          <h2>Cijela Zadarska županija</h2>
+          <p>Sjedište nam je u Zadru, a na radove dolazimo u sva mjesta u županiji.</p>
+        </div>
+        <ul class="places">
+          {mjesta.map((m) => <li><Icon name="pin" size={16} /> {m}</li>)}
+          <li class="places__more">i okolna mjesta</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- DIGITALNI MARKETING – POVEZNICA -->
+    <section class="band">
+      <div class="container band__inner">
+        <div>
+          <p class="eyebrow">Novo</p>
+          <h2>Digitalni marketing</h2>
+          <p class="ph">Kratki tekst koji najavljuje marketinški dio i vodi na podstranicu.</p>
+        </div>
+        <a class="btn btn--gold" href="/digitalni-marketing/">Saznajte više <Icon name="arrow" size={20} /></a>
+      </div>
+    </section>
+
+    <Contact
+      naslov="Dogovorimo procjenu"
+      tekst="Nazovite ili pošaljite poruku s kratkim opisom radova i lokacijom. Javit ćemo se i dogovoriti dolazak na objekt."
+      poruka="Pozdrav, zanima me procjena radova."
+      izvor="Građevinski radovi"
+      vrste={usluge.map((u) => u.naslov)}
+      porukaPlaceholder="Opišite radove, lokaciju i okvirnu kvadraturu."
+    />
+  </main>
+
+  <Footer />
+</Layout>

@@ -1,0 +1,58 @@
+---
+import Icon from './Icon.astro';
+import ContactForm from './ContactForm.astro';
+import { firma, whatsappLink } from '../data/site';
+
+interface Props {
+  eyebrow?: string;
+  naslov: string;
+  tekst: string;
+  poruka: string; // unaprijed ispunjena WhatsApp poruka
+  izvor: string; // s koje stranice dolazi upit
+  vrste?: string[];
+  porukaPlaceholder?: string;
+}
+const { eyebrow = 'Kontakt', naslov, tekst, poruka, izvor, vrste, porukaPlaceholder } = Astro.props;
+---
+<section class="section contact" id="kontakt">
+  <div class="container contact__grid">
+    <div>
+      <p class="eyebrow">{eyebrow}</p>
+      <h2>{naslov}</h2>
+      <p class="muted">{tekst}</p>
+      <a class="contact__phone" href={firma.telefonLink}>
+        <Icon name="phone" size={30} /> {firma.telefon}
+      </a>
+      <div class="contact__actions">
+        <a class="btn btn--gold" href={firma.telefonLink}>Nazovite</a>
+        <a class="btn btn--dark" href={whatsappLink(poruka)} target="_blank" rel="noopener">WhatsApp poruka</a>
+      </div>
+      <dl class="contact__info">
+        <div>
+          <dt>Adresa</dt>
+          <dd>{firma.adresa}</dd>
+        </div>
+        <div>
+          <dt>Tvrtka</dt>
+          <dd>{firma.punNaziv}</dd>
+        </div>
+        {firma.email && (
+          <div>
+            <dt>E-mail</dt>
+            <dd><a href={`mailto:${firma.email}`}>{firma.email}</a></dd>
+          </div>
+        )}
+      </dl>
+    </div>
+    <ContactForm izvor={izvor} vrste={vrste} porukaPlaceholder={porukaPlaceholder} />
+  </div>
+  <div class="container">
+    <div class="contact__map">
+      <iframe
+        title="Lokacija 4KGradnja na karti"
+        src="https://maps.google.com/maps?q=Ulica%20dr.%20Franje%20Tu%C4%91mana%2C%20Zadar&z=14&output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </div>
+</section>

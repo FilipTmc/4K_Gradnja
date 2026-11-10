@@ -1,0 +1,45 @@
+---
+import Icon from './Icon.astro';
+import { firma } from '../data/site';
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isMarketing = path.startsWith('/digitalni-marketing');
+
+const links = [
+  { href: '/#usluge', label: 'Usluge' },
+  { href: '/#kako-radimo', label: 'Kako radimo' },
+  { href: '/#podrucje', label: 'Područje rada' },
+  { href: '/digitalni-marketing/', label: 'Digitalni marketing', active: isMarketing },
+  { href: isMarketing ? '#kontakt' : '/#kontakt', label: 'Kontakt' },
+];
+---
+<header class="header" id="top">
+  <div class="container header__inner">
+    <a href="/" class="header__logo" aria-label="4KGradnja – početna">
+      <img src="/logo.png" alt="4KGradnja" width="1093" height="596" />
+    </a>
+    <nav class="nav" aria-label="Glavna navigacija">
+      {links.map((l) => (
+        <a href={l.href} class:list={{ 'is-active': l.active }}>{l.label}</a>
+      ))}
+    </nav>
+    <a class="btn btn--gold btn--sm header__call" href={firma.telefonLink}>
+      <Icon name="phone" size={18} /> <span>{firma.telefon}</span>
+    </a>
+    <details class="mnav">
+      <summary aria-label="Otvori izbornik"><span></span><span></span><span></span></summary>
+      <nav class="mnav__panel" aria-label="Mobilni izbornik">
+        {links.map((l) => (
+          <a href={l.href} class:list={{ 'is-active': l.active }}>{l.label}</a>
+        ))}
+      </nav>
+    </details>
+  </div>
+</header>
+
+<script>
+  // Zatvori mobilni izbornik nakon klika na link
+  document.querySelectorAll('.mnav__panel a').forEach((a) =>
+    a.addEventListener('click', () => a.closest('details')?.removeAttribute('open'))
+  );
+</script>

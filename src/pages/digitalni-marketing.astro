@@ -1,0 +1,150 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Contact from '../components/Contact.astro';
+import {
+  firma,
+  whatsappLink,
+  marketingUsluge,
+  marketingKoraci,
+  marketingKlijenti,
+  marketingPitanja,
+} from '../data/site';
+
+const poruka = 'Pozdrav, zanima me digitalni marketing za moj posao.';
+---
+<Layout
+  title="Digitalni marketing | 4KGradnja"
+  description="Digitalni marketing – 4KGradnja, Zadar."
+>
+  <Header />
+
+  <main>
+    <!-- HERO -->
+    <section class="hero hero--mkt">
+      <div class="container hero__grid">
+        <div class="hero__text">
+          <p class="eyebrow">Digitalni marketing · Zadar</p>
+          <h1>Digitalni <span class="gold">marketing</span></h1>
+          <p class="lead ph">
+            Uvodni tekst o digitalnom marketingu: što nudite, kome i zašto baš vi.
+            Dvije do tri rečenice, upisat ćemo ih kad dogovorimo sadržaj.
+          </p>
+          <div class="hero__cta">
+            <a class="btn btn--gold" href="#kontakt">
+              Zatražite ponudu <Icon name="arrow" size={20} />
+            </a>
+            <a class="btn btn--ghost" href={whatsappLink(poruka)} target="_blank" rel="noopener">
+              <Icon name="chat" size={20} /> Pošaljite poruku
+            </a>
+          </div>
+        </div>
+
+        <aside class="hero__card hero__card--stats" aria-label="Kanali">
+          <p class="hero__card-title">Istaknuto</p>
+          <div class="channels">
+            <div class="channel channel--ph"><span>Stavka 1</span></div>
+            <div class="channel channel--ph"><span>Stavka 2</span></div>
+            <div class="channel channel--ph"><span>Stavka 3</span></div>
+            <div class="channel channel--ph"><span>Stavka 4</span></div>
+          </div>
+          <div class="hero__card-foot">
+            <span class="ph">Kratka napomena ili prednost</span>
+          </div>
+        </aside>
+      </div>
+      <div class="hero__stripe" aria-hidden="true"></div>
+    </section>
+
+    <!-- USLUGE -->
+    <section class="section" id="usluge-marketing">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Usluge</p>
+          <h2>Naslov sekcije usluga</h2>
+          <p class="ph">Kratki uvod u usluge digitalnog marketinga.</p>
+        </div>
+        <div class="cards">
+          {marketingUsluge.map((u) => (
+            <article class="card card--ph">
+              <div class="card__icon"><Icon name={u.ikona} /></div>
+              <h3>{u.naslov}</h3>
+              <p>{u.opis}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- KAKO RADIMO -->
+    <section class="section section--dark">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Kako radimo</p>
+          <h2>Naslov sekcije o suradnji</h2>
+        </div>
+        <ol class="steps steps--4">
+          {marketingKoraci.map((k, i) => (
+            <li class="step">
+              <span class="step__num">0{i + 1}</span>
+              <h3>{k.naslov}</h3>
+              <p>{k.opis}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <!-- ZA KOGA -->
+    <section class="section">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">Za koga</p>
+          <h2>Naslov sekcije za koga</h2>
+          <p class="muted ph">
+            Kratki tekst o tome s kim radite i po čemu se razlikujete.
+          </p>
+        </div>
+        <div class="audience audience--grid">
+          {marketingKlijenti.map((k) => (
+            <div class="audience__item audience__item--ph">
+              <h3>{k.naslov}</h3>
+              <p>{k.opis}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- PITANJA -->
+    <section class="section section--soft">
+      <div class="container faq-wrap">
+        <div class="section__head">
+          <p class="eyebrow">Česta pitanja</p>
+          <h2>Prije nego se javite</h2>
+        </div>
+        <div class="faq">
+          {marketingPitanja.map((q, i) => (
+            <details class="faq__item faq__item--ph" open={i === 0}>
+              <summary>{q.pitanje}<span class="faq__plus" aria-hidden="true"></span></summary>
+              <p>{q.odgovor}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <Contact
+      eyebrow="Kontakt · Digitalni marketing"
+      naslov="Javite nam se"
+      tekst="Nazovite ili pošaljite poruku i dogovorit ćemo detalje."
+      poruka={poruka}
+      izvor="Digitalni marketing"
+      porukaPlaceholder="Recite nam nešto o svom poslu i što vas zanima."
+    />
+  </main>
+
+  <Footer />
+</Layout>

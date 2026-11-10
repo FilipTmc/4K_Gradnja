@@ -1,0 +1,21 @@
+---
+import Icon from './Icon.astro';
+import { firma } from '../data/site';
+const godina = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="container footer__inner">
+    <img src="/logo.png" alt="4KGradnja" width="1093" height="596" class="footer__logo" />
+    <p>Fasade · Gletanje i bojanje · Strojno bojanje · Hidroizolacije</p>
+    <p class="footer__links">
+      <a href="/">Građevinski radovi</a>
+      <a href="/digitalni-marketing/">Digitalni marketing</a>
+      <a href={firma.telefonLink}>{firma.telefon}</a>
+    </p>
+    <p class="footer__copy">© {godina} {firma.punNaziv}, Zadar</p>
+  </div>
+</footer>
+
+<a class="float-call" href={firma.telefonLink} aria-label="Nazovite 4KGradnja">
+  <Icon name="phone" size={24} />
+</a>

@@ -1,0 +1,136 @@
+---
+import { kontaktForma, firma } from '../data/site';
+
+interface Props {
+  izvor: string;          // npr. "Građevinski radovi" ili "Digitalni marketing" (ide u naslov upita)
+  vrste?: string[];       // opcionalni padajući izbornik "Vrsta upita"
+  porukaPlaceholder?: string;
+}
+const { izvor, vrste = [], porukaPlaceholder = 'Opišite ukratko što vam treba.' } = Astro.props;
+const id = izvor.toLowerCase().replace(/[^a-z]+/g, '-');
+---
+<form
+  class="cform"
+  data-key={kontaktForma.web3formsKey}
+  data-phone={firma.telefonLink.replace('tel:+', '')}
+  data-izvor={izvor}
+  novalidate
+>
+  <p class="cform__title">Pošaljite upit</p>
+
+  <div class="cform__row">
+    <label class="cform__field">
+      <span>Ime i prezime *</span>
+      <input type="text" name="ime" autocomplete="name" required />
+    </label>
+    <label class="cform__field">
+      <span>Telefon *</span>
+      <input type="tel" name="telefon" autocomplete="tel" inputmode="tel" required />
+    </label>
+  </div>
+
+  <label class="cform__field">
+    <span>E-mail</span>
+    <input type="email" name="email" autocomplete="email" />
+  </label>
+
+  {vrste.length > 0 && (
+    <label class="cform__field">
+      <span>Vrsta upita</span>
+      <select name="vrsta">
+        <option value="">Odaberite…</option>
+        {vrste.map((v) => <option value={v}>{v}</option>)}
+        <option value="Ostalo">Ostalo</option>
+      </select>
+    </label>
+  )}
+
+  <label class="cform__field">
+    <span>Poruka *</span>
+    <textarea name="poruka" rows="4" placeholder={porukaPlaceholder} required></textarea>
+  </label>
+
+  <!-- zaštita od spam botova -->
+  <input type="checkbox" name="botcheck" class="cform__hp" tabindex="-1" autocomplete="off" />
+
+  <label class="cform__check">
+    <input type="checkbox" name="privola" required id={`privola-${id}`} />
+    <span>Slažem se da me 4KGradnja kontaktira u vezi ovog upita.</span>
+  </label>
+
+  <button class="btn btn--gold cform__submit" type="submit">Pošalji upit</button>
+  <p class="cform__status" role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('form.cform').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('.cform__status')!;
+    const btn = form.querySelector<HTMLButtonElement>('.cform__submit')!;
+
+    const setStatus = (msg: string, type: 'ok' | 'err' | '') => {
+      status.textContent = msg;
+      status.dataset.type = type;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      if (fd.get('botcheck')) return;
+
+      const ime = String(fd.get('ime') || '').trim();
+      const tel = String(fd.get('telefon') || '').trim();
+      const poruka = String(fd.get('poruka') || '').trim();
+      if (!ime || !tel || !poruka) {
+        setStatus('Molimo ispunite ime, telefon i poruku.', 'err');
+        return;
+      }
+      if (!fd.get('privola')) {
+        setStatus('Molimo potvrdite privolu za kontakt.', 'err');
+        return;
+      }
+
+      const izvor = form.dataset.izvor || '';
+      const email = String(fd.get('email') || '').trim();
+      const vrsta = String(fd.get('vrsta') || '').trim();
+      const key = form.dataset.key;
+
+      // Bez ključa: upit se otvara u WhatsAppu
+      if (!key) {
+        const txt = [
+          `Upit s web stranice (${izvor})`,
+          `Ime: ${ime}`,
+          `Telefon: ${tel}`,
+          email && `E-mail: ${email}`,
+          vrsta && `Vrsta upita: ${vrsta}`,
+          `Poruka: ${poruka}`,
+        ].filter(Boolean).join('\n');
+        window.open(`https://wa.me/${form.dataset.phone}?text=${encodeURIComponent(txt)}`, '_blank');
+        setStatus('Upit je otvoren u WhatsAppu, samo ga pošaljite.', 'ok');
+        return;
+      }
+
+      btn.disabled = true;
+      setStatus('Šaljem…', '');
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            access_key: key,
+            subject: `Novi upit s web stranice: ${izvor}`,
+            from_name: '4KGradnja web stranica',
+            ime, telefon: tel, email, vrsta, poruka,
+          }),
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error();
+        form.reset();
+        setStatus('Hvala! Upit je poslan, javit ćemo vam se uskoro.', 'ok');
+      } catch {
+        setStatus('Slanje nije uspjelo. Nazovite nas ili pošaljite poruku na WhatsApp.', 'err');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
+</script>
