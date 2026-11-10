@@ -17,12 +17,13 @@ const { title, description } = Astro.props;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content="/logo.png" />
+    <meta name="theme-color" content="#f5f3ee" />
     <meta property="og:locale" content="hr_HR" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap"
       rel="stylesheet"
     />
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -40,6 +41,84 @@ const { title, description } = Astro.props;
     })} />
   </head>
   <body>
+    <div class="progress" aria-hidden="true"><i></i></div>
     <slot />
+    <script>
+      // Elementi se lagano pojavljuju pri skrolanju
+      const els = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('js-reveal');
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+          });
+        }, { threshold: 0.15 });
+        els.forEach((el) => io.observe(el));
+      }
+
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // potez boje ispod naslova kad dođu u vidno polje
+      const paints = document.querySelectorAll('.paint:not(.hero .paint)');
+      if ('IntersectionObserver' in window) {
+        const po = new IntersectionObserver((en) => en.forEach((e) => {
+          if (e.isIntersecting) { e.target.classList.add('is-painted'); po.unobserve(e.target); }
+        }), { threshold: 0.8 });
+        paints.forEach((p) => po.observe(p));
+      } else paints.forEach((p) => p.classList.add('is-painted'));
+      const fine = matchMedia('(pointer: fine)').matches;
+
+      // traka napretka čitanja (kao potez boje na vrhu)
+      const prog = document.querySelector<HTMLElement>('.progress i');
+      const big = document.querySelector<HTMLElement>('[data-parallax]');
+      const onScroll = () => {
+        const h = document.documentElement.scrollHeight - innerHeight;
+        if (prog) prog.style.transform = `scaleX(${h > 0 ? scrollY / h : 0})`;
+        if (big && !reduce) big.style.transform = `translate(-50%, calc(-50% + ${scrollY * Number(big.dataset.parallax)}px))`;
+      };
+      onScroll();
+      addEventListener('scroll', onScroll, { passive: true });
+
+      if (!reduce && fine) {
+        // amblem i oznake prate miš (paralaksa)
+        const hero = document.querySelector<HTMLElement>('.hero');
+        const layers = [...document.querySelectorAll<HTMLElement>('[data-depth]')];
+        hero?.addEventListener('pointermove', (e) => {
+          const r = hero.getBoundingClientRect();
+          const dx = (e.clientX - r.left) / r.width - 0.5;
+          const dy = (e.clientY - r.top) / r.height - 0.5;
+          layers.forEach((l) => {
+            const d = Number(l.dataset.depth);
+            l.style.translate = `${-dx * d}px ${-dy * d}px`;
+          });
+        });
+
+        // 3D nagib kartica
+        document.querySelectorAll<HTMLElement>('.tilt').forEach((c) => {
+          c.addEventListener('pointermove', (e) => {
+            const r = c.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width - 0.5;
+            const y = (e.clientY - r.top) / r.height - 0.5;
+            c.style.setProperty('--rx', `${-y * 8}deg`);
+            c.style.setProperty('--ry', `${x * 10}deg`);
+            c.style.setProperty('--mx', `${(x + 0.5) * 100}%`);
+            c.style.setProperty('--my', `${(y + 0.5) * 100}%`);
+          });
+          c.addEventListener('pointerleave', () => {
+            c.style.setProperty('--rx', '0deg');
+            c.style.setProperty('--ry', '0deg');
+          });
+        });
+
+        // magnetni gumbi
+        document.querySelectorAll<HTMLElement>('.btn--gold, .btn--dark').forEach((b) => {
+          b.addEventListener('pointermove', (e) => {
+            const r = b.getBoundingClientRect();
+            b.style.translate = `${(e.clientX - r.left - r.width / 2) * 0.18}px ${(e.clientY - r.top - r.height / 2) * 0.3}px`;
+          });
+          b.addEventListener('pointerleave', () => { b.style.translate = ''; });
+        });
+      }
+    </script>
   </body>
 </html>

@@ -4,6 +4,7 @@ import Icon from '../components/Icon.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Contact from '../components/Contact.astro';
+import Marquee from '../components/Marquee.astro';
 import { firma, usluge, koraci, mjesta } from '../data/site';
 
 ---
@@ -16,16 +17,21 @@ import { firma, usluge, koraci, mjesta } from '../data/site';
   <main>
     <!-- HERO -->
     <section class="hero">
+      <div class="hero__bigtext" aria-hidden="true" data-parallax="0.25">4K</div>
       <div class="container hero__grid">
         <div class="hero__text">
-          <p class="eyebrow">Zadar i Zadarska županija</p>
-          <h1>Fasade i završni radovi <span class="gold">izvedeni kako treba</span></h1>
-          <p class="lead">
+          <p class="eyebrow hero__in">Zadar i Zadarska županija</p>
+          <h1 class="hero__title">
+            <span class="line"><span>Fasade i završni</span></span>
+            <span class="line"><span>radovi <span class="paint">izvedeni</span></span></span>
+            <span class="line"><span><span class="paint paint--2">kako treba</span></span></span>
+          </h1>
+          <p class="lead hero__in">
             Gletanje, bojanje, fasade i unutarnji završni radovi za obiteljske kuće,
             stanove i poslovne prostore. Dolazimo na procjenu, šaljemo jasnu ponudu
             i radove privodimo kraju uredno i u dogovorenom roku.
           </p>
-          <div class="hero__cta">
+          <div class="hero__cta hero__in">
             <a class="btn btn--gold" href={firma.telefonLink}>
               <Icon name="phone" size={20} /> Nazovite za procjenu
             </a>
@@ -35,19 +41,16 @@ import { firma, usluge, koraci, mjesta } from '../data/site';
           </div>
         </div>
 
-        <aside class="hero__card" aria-label="Ukratko">
-          <p class="hero__card-title">Što radimo</p>
-          <ul>
-            {usluge.map((u) => (
-              <li><Icon name="check" size={18} /> {u.naslov}</li>
-            ))}
-          </ul>
-          <div class="hero__card-foot">
-            <span>Za privatne klijente i tvrtke</span>
-          </div>
-        </aside>
+        <div class="hero__visual" aria-hidden="true" data-tiltzone>
+          <div class="hero__glow"></div>
+          <div class="hero__ring"></div>
+          <img src="/emblem-light.png" alt="" width="665" height="577" class="hero__emblem" data-depth="18" />
+          <div class="hero__chip hero__chip--a" data-depth="40"><Icon name="facade" size={18} /> Fasade</div>
+          <div class="hero__chip hero__chip--b" data-depth="30"><Icon name="spray" size={18} /> Strojno bojanje</div>
+          <div class="hero__chip hero__chip--c" data-depth="50"><Icon name="drop" size={18} /> Hidroizolacije</div>
+        </div>
       </div>
-      <div class="hero__stripe" aria-hidden="true"></div>
+      <Marquee items={usluge.map((u) => u.naslov)} />
     </section>
 
     <!-- USLUGE -->
@@ -59,8 +62,9 @@ import { firma, usluge, koraci, mjesta } from '../data/site';
           <p>Jedan izvođač za unutarnje i vanjske završne radove, bez traženja više majstora.</p>
         </div>
         <div class="cards">
-          {usluge.map((u) => (
-            <article class="card">
+          {usluge.map((u, i) => (
+            <article class="card reveal tilt">
+              <span class="card__num">0{i + 1}</span>
               <div class="card__icon"><Icon name={u.ikona} /></div>
               <h3>{u.naslov}</h3>
               <p>{u.opis}</p>
@@ -79,7 +83,7 @@ import { firma, usluge, koraci, mjesta } from '../data/site';
         </div>
         <ol class="steps">
           {koraci.map((k, i) => (
-            <li class="step">
+            <li class="step reveal">
               <span class="step__num">0{i + 1}</span>
               <h3>{k.naslov}</h3>
               <p>{k.opis}</p>
@@ -101,11 +105,11 @@ import { firma, usluge, koraci, mjesta } from '../data/site';
           </p>
         </div>
         <div class="audience">
-          <div class="audience__item">
+          <div class="audience__item reveal">
             <h3>Privatni klijenti</h3>
             <p>Obiteljske kuće, stanovi i vikendice: obnova, adaptacija ili uređenje prije useljenja.</p>
           </div>
-          <div class="audience__item">
+          <div class="audience__item reveal">
             <h3>Tvrtke</h3>
             <p>Uredi, lokali, apartmani i poslovni objekti kojima treba brz, uredan i pouzdan izvođač.</p>
           </div>

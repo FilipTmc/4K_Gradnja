@@ -4,6 +4,7 @@ import Icon from '../components/Icon.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Contact from '../components/Contact.astro';
+import Marquee from '../components/Marquee.astro';
 import {
   firma,
   whatsappLink,
@@ -24,15 +25,19 @@ const poruka = 'Pozdrav, zanima me digitalni marketing za moj posao.';
   <main>
     <!-- HERO -->
     <section class="hero hero--mkt">
+      <div class="hero__bigtext" aria-hidden="true" data-parallax="0.25">4K</div>
       <div class="container hero__grid">
         <div class="hero__text">
-          <p class="eyebrow">Digitalni marketing · Zadar</p>
-          <h1>Digitalni <span class="gold">marketing</span></h1>
-          <p class="lead ph">
+          <p class="eyebrow hero__in">Digitalni marketing · Zadar</p>
+          <h1 class="hero__title">
+            <span class="line"><span>Digitalni</span></span>
+            <span class="line"><span><span class="paint">marketing</span></span></span>
+          </h1>
+          <p class="lead ph hero__in">
             Uvodni tekst o digitalnom marketingu: što nudite, kome i zašto baš vi.
             Dvije do tri rečenice, upisat ćemo ih kad dogovorimo sadržaj.
           </p>
-          <div class="hero__cta">
+          <div class="hero__cta hero__in">
             <a class="btn btn--gold" href="#kontakt">
               Zatražite ponudu <Icon name="arrow" size={20} />
             </a>
@@ -42,7 +47,7 @@ const poruka = 'Pozdrav, zanima me digitalni marketing za moj posao.';
           </div>
         </div>
 
-        <aside class="hero__card hero__card--stats" aria-label="Kanali">
+        <aside class="hero__card hero__card--stats hero__in" aria-label="Kanali">
           <p class="hero__card-title">Istaknuto</p>
           <div class="channels">
             <div class="channel channel--ph"><span>Stavka 1</span></div>
@@ -55,7 +60,7 @@ const poruka = 'Pozdrav, zanima me digitalni marketing za moj posao.';
           </div>
         </aside>
       </div>
-      <div class="hero__stripe" aria-hidden="true"></div>
+      <Marquee items={['Digitalni marketing', '4KGradnja', 'Zadar', 'Digitalni marketing', '4KGradnja', 'Zadar']} />
     </section>
 
     <!-- USLUGE -->
@@ -67,8 +72,9 @@ const poruka = 'Pozdrav, zanima me digitalni marketing za moj posao.';
           <p class="ph">Kratki uvod u usluge digitalnog marketinga.</p>
         </div>
         <div class="cards">
-          {marketingUsluge.map((u) => (
-            <article class="card card--ph">
+          {marketingUsluge.map((u, i) => (
+            <article class="card card--ph reveal tilt">
+              <span class="card__num">0{i + 1}</span>
               <div class="card__icon"><Icon name={u.ikona} /></div>
               <h3>{u.naslov}</h3>
               <p>{u.opis}</p>
@@ -87,7 +93,7 @@ const poruka = 'Pozdrav, zanima me digitalni marketing za moj posao.';
         </div>
         <ol class="steps steps--4">
           {marketingKoraci.map((k, i) => (
-            <li class="step">
+            <li class="step reveal">
               <span class="step__num">0{i + 1}</span>
               <h3>{k.naslov}</h3>
               <p>{k.opis}</p>
@@ -109,7 +115,7 @@ const poruka = 'Pozdrav, zanima me digitalni marketing za moj posao.';
         </div>
         <div class="audience audience--grid">
           {marketingKlijenti.map((k) => (
-            <div class="audience__item audience__item--ph">
+            <div class="audience__item audience__item--ph reveal">
               <h3>{k.naslov}</h3>
               <p>{k.opis}</p>
             </div>

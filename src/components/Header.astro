@@ -38,6 +38,12 @@ const links = [
 </header>
 
 <script>
+  // Header postaje taman pri skrolanju
+  const header = document.querySelector('.header');
+  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 40);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
   // Zatvori mobilni izbornik nakon klika na link
   document.querySelectorAll('.mnav__panel a').forEach((a) =>
     a.addEventListener('click', () => a.closest('details')?.removeAttribute('open'))

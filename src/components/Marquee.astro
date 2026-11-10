@@ -1,0 +1,22 @@
+---
+interface Props { items: string[] }
+const { items } = Astro.props;
+// dupliciramo niz da animacija ide u krug bez prekida
+const loop = [...items, ...items];
+---
+<div class="marquees" aria-hidden="true">
+  <div class="marquee marquee--back">
+    <div class="marquee__track marquee__track--rev">
+      {loop.map((t) => (
+        <span class="marquee__item">{t}<span class="marquee__star">✦</span></span>
+      ))}
+    </div>
+  </div>
+  <div class="marquee">
+    <div class="marquee__track">
+      {loop.map((t) => (
+        <span class="marquee__item">{t}<span class="marquee__star">✦</span></span>
+      ))}
+    </div>
+  </div>
+</div>
